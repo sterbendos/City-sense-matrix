@@ -1,0 +1,149 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>STEM Traffic Dashboard</title><link rel="stylesheet" href="styles.css"></head><body>
+<div class="top">
+  <div class="brand">STEM Traffic Dashboard</div>
+  <div class="row">
+    <input id="deviceUrl" class="inp" placeholder="Device URL (ex: http://192.168.4.1) or DEMO" autocomplete="off">
+    <button id="btnConnect" class="btn">Connect</button>
+    <button id="btnDemo" class="btn ghost">Demo</button>
+  </div>
+  <div class="meta">
+    <div id="connBadge" class="badge">DISCONNECTED</div>
+    <div id="hint" class="hint"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="grid">
+    <div class="card">
+      <div class="cardTitle">IR Counters</div>
+      <div class="kpiRow">
+        <div class="kpi"><div class="k">Cars In</div><div id="carsIn" class="v">0</div></div>
+        <div class="kpi"><div class="k">Cars Out</div><div id="carsOut" class="v">0</div></div>
+        <div class="kpi"><div class="k">Occupancy</div><div id="occ" class="v">0</div></div>
+      </div>
+      <div class="actions">
+        <button id="btnReset" class="btn">Reset</button>
+        <button id="btnMock" class="btn ghost">+1 Mock</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardTitle">Air (MQ135)</div>
+      <div class="kpiRow">
+        <div class="kpi"><div class="k">Current</div><div id="mq135" class="v">0.00</div></div>
+        <div class="kpi"><div class="k">Before</div><div id="airBefore" class="v">—</div></div>
+        <div class="kpi"><div class="k">After</div><div id="airAfter" class="v">—</div></div>
+      </div>
+      <div class="actions">
+        <button id="btnAirBefore" class="btn ghost">Set Before</button>
+        <button id="btnAirAfter" class="btn ghost">Set After</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardTitle">Emergency (NFC)</div>
+      <div class="kpiRow">
+        <div class="kpi"><div class="k">Active</div><div id="emActive" class="v">0</div></div>
+        <div class="kpi"><div class="k">Tag</div><div id="emTag" class="v mono">—</div></div>
+        <div class="kpi"><div class="k">Remaining</div><div id="emRem" class="v">0s</div></div>
+      </div>
+      <div class="actions">
+        <input id="preemptMs" class="inp small" placeholder="ms (ex 15000)">
+        <button id="btnPreempt" class="btn">Preempt</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardTitle">Lights</div>
+      <div class="lights">
+        <div class="lane"><div class="lbl">Lane A</div><div id="laneA" class="sig">—</div></div>
+        <div class="lane"><div class="lbl">Lane B</div><div id="laneB" class="sig">—</div></div>
+        <div class="lane"><div class="lbl">Lane C</div><div id="laneC" class="sig">—</div></div>
+        <div class="lane"><div class="lbl">Lane D</div><div id="laneD" class="sig">—</div></div>
+      </div>
+      <div class="kpiRow">
+        <div class="kpi"><div class="k">Mode</div><div id="mode" class="v">—</div></div>
+        <div class="kpi"><div class="k">Armed</div><div id="armed" class="v">0</div></div>
+        <div class="kpi"><div class="k">Unlocked</div><div id="unlocked" class="v">0</div></div>
+      </div>
+      <div class="actions">
+        <button id="btnAuto" class="btn ghost">AUTO</button>
+        <button id="btnManual" class="btn ghost">MANUAL</button>
+        <button id="btnArmOn" class="btn ghost">Arm</button>
+        <button id="btnArmOff" class="btn ghost">Disarm</button>
+      </div>
+      <div class="actions">
+        <input id="pin" class="inp small" placeholder="PIN">
+        <button id="btnUnlock" class="btn">Unlock</button>
+        <button id="btnLock" class="btn ghost">Lock</button>
+      </div>
+      <div class="actions">
+        <select id="laneSel" class="inp small">
+          <option value="A">Lane A</option><option value="B">Lane B</option><option value="C">Lane C</option><option value="D">Lane D</option>
+        </select>
+        <select id="stateSel" class="inp small">
+          <option value="R">R</option><option value="Y">Y</option><option value="G">G</option>
+        </select>
+        <button id="btnSetLane" class="btn">Set</button>
+      </div>
+    </div>
+
+    <div class="card wide">
+      <div class="cardTitle">QR</div>
+      <div class="qrGrid">
+        <div class="qrLeft">
+          <div class="row">
+            <input id="qrText" class="inp" placeholder="Text/URL to encode">
+            <button id="btnQRDevice" class="btn">Use Device URL</button>
+            <button id="btnQRThis" class="btn ghost">Use This Page</button>
+          </div>
+          <div class="row">
+            <input id="wifiSsid" class="inp small" placeholder="WiFi SSID">
+            <input id="wifiPass" class="inp small" placeholder="WiFi Password">
+            <select id="wifiType" class="inp small">
+              <option value="WPA">WPA/WPA2</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">No Pass</option>
+            </select>
+            <button id="btnQRWiFi" class="btn">Make WiFi QR</button>
+          </div>
+          <div class="row">
+            <button id="btnQRMake" class="btn">Generate</button>
+            <a id="btnQRSave" class="btn ghost" href="#" download="qr.png">Save PNG</a>
+          </div>
+          <div id="qrMsg" class="sub"></div>
+          <div class="sub">Tip: If you connect phone to ESP32 AP, scan the QR for the device URL so you don’t type it.</div>
+        </div>
+        <div class="qrRight">
+          <canvas id="qrCanvas" width="260" height="260"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card wide">
+      <div class="cardTitle">Chart</div>
+      <canvas id="chart" width="1200" height="420"></canvas>
+      <div class="sub">Pulls `/api/chart` when connected (or uses demo history).</div>
+    </div>
+
+    <div class="card wide">
+      <div class="cardTitle">Login</div>
+      <div class="row">
+        <input id="pw" class="inp" placeholder="Password (pw)" type="password">
+        <button id="btnLogin" class="btn">Login</button>
+      </div>
+      <div id="loginMsg" class="sub"></div>
+      <div class="sub">If Vercel is HTTPS and ESP32 is HTTP, browsers block calls. Use local HTTP run to talk to the device.</div>
+    </div>
+
+    <div class="card wide">
+      <div class="cardTitle">Alerts / Events</div>
+      <div id="alerts" class="list"></div>
+      <div id="events" class="list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+<script src="app.js"></script>
+</body></html>
